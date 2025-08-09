@@ -94,6 +94,7 @@ Contrary to the expectations of AI policy, labeling a video as AI-generated does
 In Study 2, we shift our focus from influence to exposure, which is a necessary precursor to any persuasive effect. Rather than assigning content, we allow participants to choose which video to watch. This design enables us to examine whether AI labeling influences participants’ willingness to engage with the content. Specifically, we test whether labeling a deepfake as AI-generated increases or decreases viewers’ interest in watching it, thereby affecting the likelihood of exposure.
 
 ## Methods
+
 ```{r}
 
 study2_25 <- read.csv(here::here("Data/S2_2025_cleaned.csv")) %>%
@@ -112,7 +113,6 @@ contingency_table_25 <- table(study2_25$Video_choice, study2_25$Condition)
 chi_test25 <- chisq.test(contingency_table_25)
 
 ```
-
 
 ```{r}
 #| label: fig-study2VideoChoice
@@ -147,7 +147,6 @@ ggplot(summary_df, aes(x = Attitude_Label, y = mean_pct, fill = Condition)) +
                 position = position_dodge(width = 0.9),
                 width = 0.1,
                 color = "grey40") +
-  scale_fill_manual(values = c("Label Shown" = "orange", "Control (Without Label)" = "darkblue")) +
   labs(x = "Attitude", y = "Percentage of Participants (%)", fill = "Condition") +
   scale_y_continuous(labels = scales::percent_format(scale = 1)) +
   theme_minimal() +
@@ -157,9 +156,10 @@ ggplot(summary_df, aes(x = Attitude_Label, y = mean_pct, fill = Condition)) +
 
 
 ```
-To our most interest is how likely particiapnts were to choose the deepfake video that argued against thier beliefs. Labeling the video as AI-generated significantly decreased the likelihood of participants choosing to watch it, $\chi^2$(1, n = `r scales::comma(dim(study2_25)[1])`) = `r round(chi_test25$statistic,2)`, p \< .001. Specifically, `r round(mean(study2_25[study2_25$Condition == "none",]$Video_choice),2)*100`% of participants chose to watch the belief-opposing video when it was not labeled as AI-generated, compared to `r round(mean(study2_25[study2_25$Condition == "label",]$Video_choice),2)*100`% when it was labeled. Participants tend to avoid content that is created using deepfake technology and more willing to receive content that is real-recorded, when the content is against their beliefs. 
 
-This pattern held regardless of the participants' original stance on AI regulation. Among `r round(mean(study2_25$attitude == 'Pro'),2)*100`% of participants who supported AI regulation ($M_{\text{beliefPre}}$ = `r round(mean(study2_25[study2_25$attitude == 'Pro',]$belief_pre, na.rm = TRUE),2)`, SD = `r round(sd(study2_25[study2_25$attitude == 'Pro',]$belief_pre, na.rm = TRUE),2)`), `r round(mean(study2_25[study2_25$Condition == "none"& study2_25$attitude == "Pro",]$Video_choice),2)*100`% chose to watch the anti-regulation video when it was not labeled as AI-generated, compared to `r round(mean(study2_25[study2_25$Condition == "label"& study2_25$attitude == "Pro",]$Video_choice),2)*100`% when it was labeled. Similarly, among the `r round(mean(study2_25$attitude == 'Anti'),2)*100`% who opposed AI regulation ($M_{\text{beliefPre}}$ = `r round(mean(study2_25[study2_25$attitude == 'Anti',]$belief_pre, na.rm = TRUE),2)`, SD = `r round(sd(study2_25[study2_25$attitude == 'Anti',]$belief_pre, na.rm = TRUE),2)`), `r round(mean(study2_25[study2_25$Condition == "none"& study2_25$attitude == "Anti",]$Video_choice),2)*100`% selected the pro-regulation video when it was unlabeled, versus `r round(mean(study2_25[study2_25$Condition == "label"& study2_25$attitude == "Anti",]$Video_choice),2)*100`% when it was labeled (see @fig-study2VideoChoice). 
+To our most interest is how likely particiapnts were to choose the deepfake video that argued against thier beliefs. Labeling the video as AI-generated significantly decreased the likelihood of participants choosing to watch it, $\chi^2$(1, n = `r scales::comma(dim(study2_25)[1])`) = `r round(chi_test25$statistic,2)`, p \< .001. Specifically, `r round(mean(study2_25[study2_25$Condition == "none",]$Video_choice),2)*100`% of participants chose to watch the belief-opposing video when it was not labeled as AI-generated, compared to `r round(mean(study2_25[study2_25$Condition == "label",]$Video_choice),2)*100`% when it was labeled. Participants tend to avoid content that is created using deepfake technology and more willing to receive content that is real-recorded, when the content is against their beliefs.
+
+This pattern held regardless of the participants' original stance on AI regulation. Among `r round(mean(study2_25$attitude == 'Pro'),2)*100`% of participants who supported AI regulation ($M_{\text{beliefPre}}$ = `r round(mean(study2_25[study2_25$attitude == 'Pro',]$belief_pre, na.rm = TRUE),2)`, SD = `r round(sd(study2_25[study2_25$attitude == 'Pro',]$belief_pre, na.rm = TRUE),2)`), `r round(mean(study2_25[study2_25$Condition == "none"& study2_25$attitude == "Pro",]$Video_choice),2)*100`% chose to watch the anti-regulation video when it was not labeled as AI-generated, compared to `r round(mean(study2_25[study2_25$Condition == "label"& study2_25$attitude == "Pro",]$Video_choice),2)*100`% when it was labeled. Similarly, among the `r round(mean(study2_25$attitude == 'Anti'),2)*100`% who opposed AI regulation ($M_{\text{beliefPre}}$ = `r round(mean(study2_25[study2_25$attitude == 'Anti',]$belief_pre, na.rm = TRUE),2)`, SD = `r round(sd(study2_25[study2_25$attitude == 'Anti',]$belief_pre, na.rm = TRUE),2)`), `r round(mean(study2_25[study2_25$Condition == "none"& study2_25$attitude == "Anti",]$Video_choice),2)*100`% selected the pro-regulation video when it was unlabeled, versus `r round(mean(study2_25[study2_25$Condition == "label"& study2_25$attitude == "Anti",]$Video_choice),2)*100`% when it was labeled (see @fig-study2VideoChoice).
 
 Next, we compare the change in beliefs after watching the video across conditions. Specifically, we examine the extent to which participants’ opinions on AI regulation shift in the opposite direction of their initial stance (that is, becoming less supportive among those who initially supported regulation, and less opposed among those who initially opposed it). We compare the belief reported after watching with their initial beliefs, and define changes that move toward the opposite direction as positive changes. We find that the change in opinions is significantly different between the two conditions, with participants seeing the AI labels showing less change compared to those who were not informed how the video opposing their belief was created, `r papaja::apa_print(t.test(change_in_opposite ~ Condition, data = study2_25, var.equal = T))$statistic`. This difference may be driven by the fact that participants avoid content that is created using AI technology, and thus are less likely to watch the deepfake video that contradicts their beliefs, and therefore less likely to change their opinions.
 
@@ -167,10 +167,274 @@ We then focus on the subset of participants who watched deepfake videos, with or
 
 ## Discussion
 
-When participants are given a choice, they are less likely to watch a video that argues against their beliefs if it is labeled as AI-generated versus not knowing how it is created. This findings suggest that labeling a deepfake as such reduces
-people's willingness to voluntarily exposure, making its content less appealing. However, as shown in Study 1, AI label does not prevent people from being influenced by the content when they are exposed to it. AI label may help reducing the influence of content created by AI in reducing its exposure, but not its influence once people choose to watch it[^1]. 
+When participants are given a choice, they are less likely to watch a video that argues against their beliefs if it is labeled as AI-generated versus not knowing how it is created. This findings suggest that labeling a deepfake as such reduces people's willingness to voluntarily exposure, making its content less appealing. However, as shown in Study 1, AI label does not prevent people from being influenced by the content when they are exposed to it. AI label may help reducing the influence of content created by AI in reducing its exposure, but not its influence once people choose to watch it[^1].
 
 [^1]: We conducted a similar study in 2024, where participants were also given the chance of choosing which video to watch. It was a year before we ran Study 2 and at the time deepfake videos were not as common as they are now. Please refer to Appendix for the details of the study.
+
+# Study3
+
+So far, we know that at the personal level, AI labeling does not reduce the persuasive effect of deepfake content but does reduce the willingness for voluntary exposure. Finally, we examine the impact of AI labeling on the willingness to share deepfake videos, focusing on how it influences the dissemination of deepfake content.
+
+## Methods
+
+```{r}
+
+study3 <- read.csv(here::here("Data/S3_pilot_cleaned.csv")) %>%
+  dplyr::mutate(Male = ifelse(gender == 'Male',1,0)) %>%
+  dplyr::mutate(video_match = ifelse(video_match == '1',1,0))
+
+```
+
+We recruited `r scales::comma(dim(study3)[1])` participants ($M_{\text{Age}}$ = `r round(mean(study3$age, na.rm = TRUE),2)` years; `r round(mean(study3$Male, na.rm = TRUE)*100, 1)`% Male) from Prolific. Participants first reported their beliefs on AI regulation using the same 6-item scale as in Study 1, based on which we categorized them as supporting regulation (score above 0) or opposing regulation (score below 0). They then watched two one-minute video clips arguing for and against AI regulation, respectively. They were told that these clips were excerpts from a four-minute speech. The video opposing their beliefs was a real recording of a professor, while the video aligning with their beliefs was a deepfake version of the same professor. Participants were randomly assigned to one of three conditions: “Label,” “Informed,” or “No Label.” In the “Label” condition, participants were told that the video opposing their beliefs was AI-generated, and a label reading “AI generated” was displayed in the upper left corner throughout the video. In the “Informed” condition, participants were told the video was AI-generated but no label was presented in the video. In the “No Label” condition, they were not given this information. We randomized the order in which the real-recorded and deepfake videos were played to control for order effects.
+
+After watching both videos, participants chose which video they preferred to share with another person. We told them that we would show a full four-minute speech to another Prolific user, and they could decide which video to share. Importantly, in the “Label” and “Informed” conditions, participants themselves knew which video was AI-generated, but in the “Informed” condition, the AI label was not shown, so the other user would not know the video’s origin. After making their choice, participants reported their opinions on the two video clips. They rated the extent to which sharing each video would influence others’ opinions, mislead others, cause confusion, and represent a responsible way to share information, using a five-point scale from “Not at all” to “Extremely.” We also asked how they believed others would perceive them if they shared the video, specifically how knowledgeable, humorous, trustworthy, lacking in judgment, and trendy they would appear, on a five-point Likert scale ranging from “Not at all” to “A great deal.” We then explored participants’ reasons for choosing a particular video to share. We reminded them of their choice and asked to what extent each of the following factors influenced their decision: the video presented strong arguments, was enjoyable, was factually accurate, presented arguments that are less commonly heard, had high video quality, or was chosen at random. Finally, participants provided demographic information.
+
+## Results
+
+We first look at whether participants were willing to share the deepfake video that argued against their beliefs. When participants were not informed that the video was AI-generated, `r round(mean(study3[study3$Condition == "none",]$video_match),2)*100`% chose to share it. However, when they were informed that the video was AI-generated, this number dropped to `r round(mean(study3[study3$Condition == "new",]$video_match),2)*100`% in the "Informed" condition and `r round(mean(study3[study3$Condition == "label",]$video_match),2)*100`% in the "Label" condition. This suggests that labeling a deepfake as AI-generated reduces its appeal, making it less likely to be shared, $\chi^2$(2, n = `r scales::comma(dim(study3)[1])`) = `r round(chisq.test(table(study3$video_match, study3$Condition))$statistic,2)`, p \< .001.
+
+```{r fig.width=8, fig.height=8, dpi=300}
+#| label: fig-study3influence
+#| fig-cap: "Participants’ perceptions of sharing the videos in Study 3. The bar chart shows how participants viewed sharing the videos, separated by condition and video type."
+
+library(dplyr)
+library(tidyr)
+library(ggplot2)
+
+# Step 1: Select columns
+influence <- study3 %>% dplyr::select(c('influence_real':'responsible_fake'), Condition)
+
+
+# Step 2: Pivot longer (using regex match for _real or _fake)
+long_data <- influence %>%
+  pivot_longer(
+    cols = matches("(_real|_fake)$"),
+    names_to = "trait_type",
+    values_to = "rating"
+  ) %>%
+  separate(trait_type, into = c("trait", "type"), sep = "_")
+
+# Step 3: Reorder and rename Condition
+long_data <- long_data %>%
+  mutate(
+    Condition = recode(Condition,
+                       "new" = "Informed",
+                       "none" = "No Label",
+                       "label" = "AI Label"),
+    Condition = factor(Condition, levels = c("No Label", "Informed", "AI Label")),
+    type = recode(type,
+                  "real" = "Real Video",
+                  "fake" = "Deepfake Video")
+  )
+
+# Step 4: Compute means and SEs
+summary_data <- long_data %>%
+  group_by(Condition, trait, type) %>%
+  summarise(
+    mean_rating = mean(rating, na.rm = TRUE),
+    se = sd(rating, na.rm = TRUE) / sqrt(n()),
+    .groups = "drop"
+  )
+
+
+# Step 5: Plot
+library(stringr)
+
+ggplot(summary_data, aes(x = Condition, y = mean_rating, fill = type)) +
+  geom_col(position = position_dodge(0.8), width = 0.7) +
+  geom_errorbar(
+    aes(ymin = mean_rating - se, ymax = mean_rating + se),
+    position = position_dodge(0.8),
+    width = 0.2,
+    color = "grey50"
+  ) +
+  # Add value labels inside bars
+  geom_text(
+    aes(label = round(mean_rating, 2)),
+    position = position_dodge(0.8),
+    vjust = 5,  # pushes text lower inside bar
+    color = "white",
+    size = 3
+  ) +
+  # Wrap facet labels if too long
+  facet_wrap(~ str_wrap(trait, width = 15),  # width controls wrapping
+             ncol = 1, strip.position = "left") +
+  labs(x = "Condition", y = "Mean Rating", fill = "Video Type") +
+  theme_minimal() +
+  theme(
+    axis.text.x = element_text(size = 10),
+    strip.placement = "outside",
+    strip.text = element_text(face = "bold", size = 10), # bumped size for readability
+    panel.spacing = unit(1, "lines"),
+    axis.title.x = element_text(margin = margin(t = 10)),
+    axis.title.y = element_text(margin = margin(r = 10))
+  )
+```
+
+Next, we examine participants’ perceptions of the two videos. Please see @fig-study3influence for how participants perceived sharing the videos across conditions. When participants did not know how the video was created, they believed sharing the real video that aligned with their own stances would mislead others' opinions less, cause less confusion, and be a more responsible way to share information. In contrast, sharing the deepfake video was perceived as more misleading, more confusing, and less responsible. Interestingly, when participants were informed that the video aligning with their beliefs was AI-generated, their perceptions shifted. They saw sharing it as more misleading and confusing and less responsible. This suggests that AI labeling makes participants more cautious when considering sharing AI-generated content.
+
+```{r plot-study3, fig.width=8, fig.height=12, dpi=300}
+#| label: fig-study3impression
+#| fig-cap: "Anticipated impressions from sharing each video in Study 3. The bar chart shows how participants believe others would perceive them, broken down by condition and video type."
+
+library(dplyr)
+library(tidyr)
+library(ggplot2)
+
+# Step 1: Select columns
+impression <- study3 %>%
+  select(Knowledgeable_real:Trendy_fake, Condition)
+
+# Step 2: Pivot longer (using regex match for _real or _fake)
+long_data <- impression %>%
+  pivot_longer(
+    cols = matches("(_real|_fake)$"),
+    names_to = "trait_type",
+    values_to = "rating"
+  ) %>%
+  separate(trait_type, into = c("trait", "type"), sep = "_")
+
+# Step 3: Reorder and rename Condition
+long_data <- long_data %>%
+  mutate(
+    Condition = recode(Condition,
+                       "new" = "Informed",
+                       "none" = "No Label",
+                       "label" = "AI Label"),
+    Condition = factor(Condition, levels = c("No Label", "Informed", "AI Label")),
+    type = recode(type,
+                  "real" = "Real Video",
+                  "fake" = "Deepfake Video")
+  )
+
+# Step 4: Compute means and SEs
+summary_data <- long_data %>%
+  group_by(Condition, trait, type) %>%
+  summarise(
+    mean_rating = mean(rating, na.rm = TRUE),
+    se = sd(rating, na.rm = TRUE) / sqrt(n()),
+    .groups = "drop"
+  )
+
+
+# Step 5: Plot
+library(stringr)
+
+ggplot(summary_data, aes(x = Condition, y = mean_rating, fill = type)) +
+  geom_col(position = position_dodge(0.8), width = 0.7) +
+  geom_errorbar(
+    aes(ymin = mean_rating - se, ymax = mean_rating + se),
+    position = position_dodge(0.8),
+    width = 0.2,
+    color = "grey50"
+  ) +
+  # Add value labels inside bars
+  geom_text(
+    aes(label = round(mean_rating, 2)),
+    position = position_dodge(0.8),
+    vjust = 5,  # pushes text lower inside bar
+    color = "white",
+    size = 3
+  ) +
+  # Wrap facet labels if too long
+  facet_wrap(~ str_wrap(trait, width = 15),  # width controls wrapping
+             ncol = 1, strip.position = "left") +
+  labs(x = "Condition", y = "Mean Rating", fill = "Video Type") +
+  theme_minimal() +
+  theme(
+    axis.text.x = element_text(size = 10),
+    strip.placement = "outside",
+    strip.text = element_text(face = "bold", size = 10), # bumped size for readability
+    panel.spacing = unit(1, "lines"),
+    axis.title.x = element_text(margin = margin(t = 10)),
+    axis.title.y = element_text(margin = margin(r = 10))
+  )
+
+
+```
+
+In addition to their personal opinions on sharing, how participants anticipated others would view them when sharing deepfake content might also influence their decisions. When not told how the video was created, participants felt that sharing a video aligning with their beliefs would make them seem more knowledgeable, `r papaja::apa_print(t.test(study3$Knowledgeable_real[study3$Condition == "none"], study3$Knowledgeable_fake[study3$Condition == "none"],paired = TRUE))$statistic`, though also somewhat lacking in judgment, `r papaja::apa_print(t.test(study3$LackingJudgment_real[study3$Condition == "none"], study3$LackingJudgment_fake[study3$Condition == "none"],paired = TRUE))$statistic`, with no significant differences in perceived trustworthiness, trendiness, or humor. However, when they were explicitly informed that the video aligning with their beliefs was created using deepfake technology, they believed that sharing it would make them appear more negative. In the “Label” condition, where others would also see that the shared video was created using AI, participants believed that sharing the deepfake video would make them appear less trustworthy, `r papaja::apa_print(t.test(study3$Trustworthy_real[study3$Condition == "label"], study3$Trustworthy_fake[study3$Condition == "label"],paired = TRUE))$statistic`, more lacking in judgment, `r papaja::apa_print(t.test(study3$LackingJudgment_real[study3$Condition == "label"], study3$LackingJudgment_fake[study3$Condition == "label"],paired = TRUE))$statistic`, and less knowledgeable, `r papaja::apa_print(t.test(study3$Knowledgeable_real[study3$Condition == "label"], study3$Knowledgeable_fake[study3$Condition == "label"],paired = TRUE))$statistic`, compared to sharing the real video. This suggests that AI labeling might reduce the willingness to share deepfake content by harming the sharer’s social image. A similar but smaller pattern emerged in the "Informed" condition, where participants knew the video was AI-generated but no label was shown: sharing the deepfake was still viewed as making them appear less trustworthy, `r papaja::apa_print(t.test(study3$Trustworthy_real[study3$Condition == "new"], study3$Trustworthy_fake[study3$Condition == "new"],paired = TRUE))$statistic`, and more lacking in judgment, `r papaja::apa_print(t.test(study3$LackingJudgment_real[study3$Condition == "new"], study3$LackingJudgment_fake[study3$Condition == "new"],paired = TRUE))$statistic`, though the differences from the real video were less pronounced. @fig-study3impression fpresents the anticipated impressions of sharing real and deepfake videos across conditions.
+
+```{r fig.width=8, fig.height=8, dpi=300}
+
+#| tbl-cap: "Participants' reasons for choosing to share a video in Study 3. The table shows the mean ratings of various factors influencing their decision, separated by condition and video shared"
+#| label: tbl-study3reasons
+#| tbl-opts: caption-side: top, table-layout: fixed, width: 100%
+#| tbl-opts: colnames: TRUE, rownames: FALSE, digits: 2
+# bar charts of reasons, collapes across all conditions
+
+reasons <- study3 %>% dplyr::select(c('convincing':'preference'), Condition, video_match)
+  
+# bar chart, reasons by condition and video_match
+
+# Step 1: Pivot longer to tidy format
+reasons_long <- reasons %>%
+  pivot_longer(
+    cols = convincing:preference,
+    names_to = "trait",
+    values_to = "rating"
+  ) %>%
+  mutate(
+    trait = recode(trait,
+                   "convincing" = "Strong Arguments",
+                   "enjoyable" = "Enjoyable",
+                   "accurate" = "Factually Accurate",
+                   "less_heard" = "Less Commonly Heard",
+                   "quality" = "High Quality",
+                   "preference" = "Random Choice"),
+    trait = factor(trait, levels = c("Strong Arguments", "Enjoyable", "Factually Accurate",
+                                    "Less Commonly Heard", "High Quality", "Random Choice"))
+  )
+
+# Step 2: Summarize means and standard errors by Condition, video_match, and trait
+reasons_summary <- reasons_long %>%
+  group_by(Condition, video_match, trait) %>%
+  summarise(
+    mean_rating = mean(rating, na.rm = TRUE),
+    se = sd(rating, na.rm = TRUE) / sqrt(n()),
+    .groups = "drop"
+  ) %>%
+  mutate(
+    Condition = recode(Condition,
+                       "new" = "Informed",
+                       "none" = "No Label",
+                       "label" = "AI Label"),
+    Condition = factor(Condition, levels = c("No Label", "Informed", "AI Label")),
+    video_match = recode_factor(as.character(video_match),
+                               "0" = "Real Video",
+                               "1" = "Deepfake Video")
+  )
+
+# Step 3: Plot
+ggplot(reasons_summary, aes(x = trait, y = mean_rating, fill = factor(video_match))) +
+  geom_col(position = position_dodge(width = 0.9), width = 0.7) +
+  geom_errorbar(
+    aes(ymin = mean_rating - se, ymax = mean_rating + se),
+    position = position_dodge(width = 0.9),
+    width = 0.1,
+    color = "grey50"
+  ) +
+  geom_text(
+    aes(label = round(mean_rating, 2)),
+    position = position_dodge(width = 0.9),
+    vjust = 2.5,
+    color = "white",
+    size = 3
+  ) +
+  facet_wrap(~Condition, ncol = 1) +
+  labs(
+    x = "Reason",
+    y = "Mean Rating",
+    fill = "Video Match"
+  ) +
+  theme_minimal(base_size = 14) +
+  theme(
+    axis.text.x = element_text(angle = 45, hjust = 1),
+    strip.text = element_text(face = "bold", size = 12)
+  )
+```
+
+Lastly, we examine participants’ reasons for choosing to share a particular video. Across all conditions, participants rated “the video presented strong arguments” as the most influential factor in their decision, followed by “the video was factually accurate” and “the video was enjoyable.” Notably, participants who were not informed that the video aligned with their beliefs was created by AI reported sharing it due to its accuracy. In the "Label" condition, participants decided to share the real recorded video for the very same reason even though it went against their stance. Please see @tbl-study3reasons for the mean ratings of various factors influencing participants' decisions to share a video, separated by condition and video type.
 
 # Appendix
 
